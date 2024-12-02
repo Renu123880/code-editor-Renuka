@@ -1,0 +1,19 @@
+ /** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: "class", // Enable dark mode
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply dark:bg-gray-900 dark:text-white bg-white text-black;
+}
