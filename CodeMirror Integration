@@ -1,0 +1,67 @@
+import React, { useEffect, useState } from "react";
+import { EditorView, basicSetup } from "@codemirror/basic-setup";
+import { python } from "@codemirror/lang-python";
+import { javascript } from "@codemirror/lang-javascript";
+import { typescript } from "@codemirror/lang-typescript";
+import { go } from "@codemirror/lang-go";
+import { php } from "@codemirror/lang-php";
+import { swift } from "@codemirror/lang-swift";
+import { rust } from "@codemirror/lang-rust";
+import { cpp } from "@codemirror/lang-cpp";
+import { EditorState } from "@codemirror/state";
+
+interface CodeEditorProps {
+  language: string;
+  theme: string;
+}
+
+const CodeEditor: React.FC<CodeEditorProps> = ({ language, theme }) => {
+  const editorRef = React.useRef<HTMLDivElement>(null);
+  const [editorView, setEditorView] = useState<EditorView | null>(null);
+
+  const languageExtensions: { [key: string]: any } = {
+    python,
+    javascript,
+    typescript,
+    go,
+    php,
+    swift,
+    rust,
+    cpp,
+  };
+
+  useEffect(() => {
+    if (!editorView && editorRef.current) {
+      const view = new EditorView({
+        state: EditorState.create({
+          extensions: [
+            basicSetup,
+            languageExtensions[language]?.(),
+            EditorView.theme(
+              {
+                "&": {
+                  backgroundColor: theme === "dark" ? "#282c34" : "#ffffff",
+                  color: theme === "dark" ? "#ffffff" : "#000000",
+                },
+              },
+              { dark: theme === "dark" }
+            ),
+          ],
+        }),
+        parent: editorRef.current,
+      });
+      setEditorView(view);
+    } else if (editorView) {
+      editorView.dispatch({
+        effects: EditorState.reconfigure.of([basicSetup, languageExtensions[language]?.()]),
+      });
+    }
+    return () => {
+      editorView?.destroy();
+    };
+  }, [language, theme]);
+
+  return <div ref={editorRef} className="h-full w-full" />;
+};
+
+export default CodeEditor;
