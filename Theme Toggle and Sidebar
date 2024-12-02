@@ -1,0 +1,30 @@
+import React from "react";
+
+interface SidebarProps {
+  selectedLanguage: string;
+  onLanguageChange: (language: string) => void;
+}
+
+const languages = [
+  "python", "javascript", "typescript", "go", "php", "swift", "rust", "cpp",
+];
+
+const Sidebar: React.FC<SidebarProps> = ({ selectedLanguage, onLanguageChange }) => {
+  return (
+    <div className="flex flex-col space-y-4 p-4 border-r">
+      {languages.map((lang) => (
+        <button
+          key={lang}
+          onClick={() => onLanguageChange(lang)}
+          className={`p-2 rounded ${
+            selectedLanguage === lang ? "bg-blue-500 text-white" : "bg-gray-200"
+          }`}
+        >
+          {lang.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default Sidebar;
